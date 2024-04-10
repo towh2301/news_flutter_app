@@ -1,8 +1,17 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:news_flutter_app/common/theme.dart';
+import 'package:news_flutter_app/firebase_options.dart';
+import 'package:news_flutter_app/pages/authenticate_pages/sign_in.dart';
 import 'package:news_flutter_app/pages/onboardpages/onboard_screens.dart';
 
-void main(List<String> args) {
+import 'package:firebase_auth/firebase_auth.dart' hide EmailAuthProvider;
+
+void main(List<String> args) async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyNewsApp());
 }
 
@@ -15,7 +24,15 @@ class MyNewsApp extends StatelessWidget {
       title: 'News',
       debugShowCheckedModeBanner: false,
       theme: myTheme1,
-      home: const OnBoardingScreen(),
+      home: checkAuth(),
     );
+  }
+}
+
+Widget checkAuth() {
+  if (FirebaseAuth.instance.currentUser != null) {
+    return (const AuthGate());
+  } else {
+    return (const MyNewsApp());
   }
 }

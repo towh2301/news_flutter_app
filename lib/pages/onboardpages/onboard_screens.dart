@@ -7,14 +7,19 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 List onBoardScreens = [
   {
-    'title': 'Welcome',
+    'title': 'Welcome!',
     'description': 'First and Foremost',
     'image': 'assets/images/onboarding1.png'
   },
   {
-    'title': 'Let\'s explore',
+    'title': 'Let\'s explore!',
     'description': 'Second and More',
     'image': 'assets/images/onboarding2.png'
+  },
+  {
+    'title': 'Get started!',
+    'description': 'Second and More',
+    'image': 'assets/images/onboarding3.png'
   },
 ];
 
@@ -62,23 +67,24 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                 const SizedBox(height: 20),
                 Row(
                   children: [
-                    const GradientButton(
-                      text: 'Get Started',
-                      width: 150,
-                    ),
+                    // const GradientButton(
+                    //   text: 'Get Started',
+                    //   width: 150,
+                    // ),
                     const Spacer(),
                     GradientButton(
                       onPressed: () {
                         Navigator.of(context, rootNavigator: true).push(
                           MaterialPageRoute(
-                            builder: (context) => const SignIn(),
+                            builder: (context) => AuthGate(),
                           ),
                         );
                       },
                       text: 'Skip',
+                      fontSize: 20,
                       gradientColors: const [AppColors.white, AppColors.white],
-                      textColor: AppColors.text,
-                      width: 120,
+                      textColor: const Color.fromARGB(255, 26, 26, 26),
+                      width: 50,
                     ),
                   ],
                 ),
