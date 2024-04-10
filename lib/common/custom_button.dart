@@ -13,6 +13,7 @@ class GradientButton extends StatelessWidget {
   final TextAlign? textAlign;
   final int? maxLines;
   final FontWeight? fontWeight;
+  final Icon? icon;
 
   const GradientButton({
     super.key,
@@ -28,6 +29,7 @@ class GradientButton extends StatelessWidget {
     this.textAlign,
     this.maxLines,
     this.fontWeight,
+    this.icon,
   });
 
   @override
