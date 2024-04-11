@@ -1,7 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart' hide EmailAuthProvider;
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:news_flutter_app/pages/homepages/homescreen.dart';
+import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart';
 
 class AuthGate extends StatefulWidget {
   const AuthGate({super.key});
@@ -21,6 +24,14 @@ class _AuthGateState extends State<AuthGate> {
           return SignInScreen(
             providers: [
               EmailAuthProvider(),
+              GoogleProvider(
+                clientId:
+                    "695246035916-6f5p3dohskq2rn7pqtm78r6bfjc9k7mh.apps.googleusercontent.com",
+                scopes: List.of([
+                  'email',
+                  'https://www.googleapis.com/auth/contacts.readonly',
+                ]),
+              ),
             ],
             headerBuilder: (context, constraints, shrinkOffset) {
               return Padding(
@@ -32,21 +43,21 @@ class _AuthGateState extends State<AuthGate> {
               );
             },
             subtitleBuilder: (context, action) {
-              return Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: action == AuthAction.signIn
-                    ? const Text('Welcome to my app, please sign in!')
-                    : const Text('Welcome to my app, please sign up!'),
+              return const Padding(
+                padding: EdgeInsets.symmetric(vertical: 8.0),
+                // child: action == AuthAction.signIn
+                //     ? const Text('Welcome to my app, please sign in!')
+                //     : const Text('Welcome to my app, please sign up!'),
               );
             },
             footerBuilder: (context, action) {
-              return Padding(
-                padding: const EdgeInsets.only(top: 16),
-                child: Text(
-                  'By signing in, you agree to our Terms of Service and Privacy Policy.',
-                  style: Theme.of(context).textTheme.titleSmall,
-                  textAlign: TextAlign.left,
-                ),
+              return const Padding(
+                padding: EdgeInsets.only(top: 16),
+                // child: Text(
+                //   'By signing in, you agree to our Terms of Service and Privacy Policy.',
+                //   style: Theme.of(context).textTheme.titleSmall,
+                //   textAlign: TextAlign.left,
+                // ),
               );
             },
             sideBuilder: (context, shrinkOffset) {
