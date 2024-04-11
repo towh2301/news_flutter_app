@@ -1,9 +1,35 @@
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:news_flutter_app/common/rss_list.dart';
+import 'package:news_flutter_app/models/data/categories_model.dart';
 import 'package:news_flutter_app/pages/homepages/webfeed.dart';
 
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+class HomeNewsRssScreen extends StatefulWidget {
+  const HomeNewsRssScreen({super.key});
+
+  @override
+  State<HomeNewsRssScreen> createState() => _HomeNewsRssScreenState();
+}
+
+class _HomeNewsRssScreenState extends State<HomeNewsRssScreen> {
+  // For now, I just have one list of websites: websites[0]
+  // I will config for multiple list of websites later
+
+  final List<Map<String, String>> websites = RssMapFile().rssMap;
+
+  Map<String, String>? _categories;
+
+  @override
+  void initState() {
+    super.initState();
+    _categories = _getCategories();
+  }
+
+  _getCategories() {
+    Map<String, String> categories = {};
+    categories = websites[0];
+    return categories;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,35 +79,28 @@ class HomeScreen extends StatelessWidget {
         ],
         automaticallyImplyLeading: false,
       ),
-      body: const WebFeed(),
-      // body: Center(
-      //   child: Column(
-      //     mainAxisAlignment: MainAxisAlignment.center,
-      //     children: <Widget>[
-      //       SizedBox(
-      //         height: 100,
-      //         child: Card(
-      //           // clipBehavior is necessary because, without it, the InkWell's animation
-      //           // will extend beyond the rounded edges of the [Card] (see https://github.com/flutter/flutter/issues/109776)
-      //           // This comes with a small performance cost, and you should not set [clipBehavior]
-      //           // unless you need it.
-      //           clipBehavior: Clip.hardEdge,
-      //           child: InkWell(
-      //             splashColor: Colors.blue.withAlpha(30),
-      //             onTap: () {
-      //               debugPrint('Card tapped.');
-      //             },
-      //             child: const SizedBox(
-      //               width: 300,
-      //               height: 100,
-      //               child: Text('A card that can be tapped'),
-      //             ),
-      //           ),
-      //         ),
-      //       ),
-      //     ],
-      //   ),
-      // ),
+      body: Center(
+        child: ListView.builder(
+          itemCount: _categories?.length,
+          itemBuilder: (context, index) {
+            final category = _categories?.keys.elementAt(index);
+            final url = _categories?[category];
+            return ListTile(
+              title: Text(category ?? ''),
+              onTap: () {
+                // Navigate to the RSS feed screen for the selected category
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        WebFeedView(category ?? '', url ?? ''),
+                  ),
+                );
+              },
+            );
+          },
+        ),
+      ),
     );
   }
 }
