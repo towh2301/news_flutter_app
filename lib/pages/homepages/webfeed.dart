@@ -18,7 +18,7 @@ Future<List<RssItem>> fetchRssFeed(String url) async {
 
 class _WebFeed extends StatefulWidget {
   final String url;
-  const _WebFeed(this.url, {Key? key}) : super(key: key);
+  const _WebFeed(this.url);
 
   @override
   State<_WebFeed> createState() => _WebFeedState();
@@ -61,26 +61,41 @@ class _WebFeedState extends State<_WebFeed> {
   }
 }
 
-class WebFeedView extends StatefulWidget {
-  final String url, category;
-  const WebFeedView(this.category, this.url, {super.key});
+// class WebFeedView extends StatefulWidget {
+//   final String url, category;
+//   const WebFeedView(this.category, this.url, {super.key});
 
-  @override
-  State<WebFeedView> createState() => _WebFeedViewState();
-}
+//   @override
+//   State<WebFeedView> createState() => _WebFeedViewState();
+// }
 
-class _WebFeedViewState extends State<WebFeedView> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          widget.category,
-          style:
-              const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-        ),
-      ),
-      body: Center(child: _WebFeed(widget.url)),
-    );
-  }
+// class _WebFeedViewState extends State<WebFeedView> {
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       backgroundColor: Colors.white,
+//       appBar: AppBar(
+//         title: Text(
+//           widget.category,
+//           style:
+//               const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+//         ),
+//       ),
+//       body: Center(child: _WebFeed(widget.url)),
+//     );
+//   }
+// }
+
+Future<Widget> webFeedView(String url, String category) async {
+  return Scaffold(
+    backgroundColor: Colors.white,
+    // appBar: AppBar(
+    //   title: Text(
+    //     category,
+    //     style:
+    //         const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+    //   ),
+    // ),
+    body: Center(child: _WebFeed(url)),
+  );
 }

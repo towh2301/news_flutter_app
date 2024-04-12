@@ -26,6 +26,10 @@ class MyNewsApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: myTheme1,
       home: checkAuth(),
+      routes: {
+        '/onboarding': (context) => const OnBoardingScreen(),
+        '/authgate': (context) => const AuthGate(),
+      },
     );
   }
 }

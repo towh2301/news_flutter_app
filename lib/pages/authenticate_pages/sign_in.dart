@@ -3,7 +3,7 @@ import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:news_flutter_app/pages/homepages/homescreen.dart';
+import 'package:news_flutter_app/pages/homepages/main_home_screen.dart';
 import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart';
 
 class AuthGate extends StatefulWidget {
@@ -71,7 +71,7 @@ class _AuthGateState extends State<AuthGate> {
             },
           );
         }
-        return const HomeNewsRssScreen();
+        return const MainScreen();
       },
     );
   }
