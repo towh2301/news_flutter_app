@@ -54,6 +54,7 @@ dependencies:
     rss_dart: ^1.0.6
     xml: ^6.5.0
     webfeed_revised: ^0.7.2
+    google_nav_bar: ^5.0.6
 
 dev_dependencies:
     flutter_test:
