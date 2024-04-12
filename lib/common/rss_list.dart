@@ -2,13 +2,13 @@ const Map<String, String> baonhandanRssList = {
   'Trang chủ': 'https://nhandan.vn/rss/home.rss',
   'Chính trị': 'https://nhandan.vn/rss/chinhtri-1171.rss',
   'Xã luận': 'https://nhandan.vn/rss/xa-luan-1176.rss',
-  'Bình luận - Phê phán': 'https://nhandan.vn/rss/binh-luan-phe-phan-1180.rss',
+  'Bình luận': 'https://nhandan.vn/rss/binh-luan-phe-phan-1180.rss',
   'Kinh tế': 'https://nhandan.vn/rss/kinhte-1185.rss',
   'Văn hoá': 'https://nhandan.vn/rss/vanhoa-1251.rss',
   'Xã hội': 'https://nhandan.vn/rss/xahoi-1211.rss',
   'Pháp luật': 'https://nhandan.vn/rss/phapluat-1287.rss',
   'Thế giới': 'https://nhandan.vn/rss/thegioi-1231.rss',
-  'Khoa học - Công nghệ': 'https://nhandan.vn/rss/khoahoc-congnghe-1292.rss'
+  'KH - CN': 'https://nhandan.vn/rss/khoahoc-congnghe-1292.rss'
 };
 const Map<String, String> vnexpressRssList = {
   'Trang chủ': 'https://vnexpress.net/rss/tin-moi-nhat.rss',
@@ -25,6 +25,13 @@ const Map<String, String> vnexpressRssList = {
 
 class RssMapFile {
   List<Map<String, String>> rssMap = [
+    baonhandanRssList,
+    vnexpressRssList,
+  ];
+}
+
+class WebsitesList {
+  List<Map<String, String>> websList = [
     baonhandanRssList,
     vnexpressRssList,
   ];

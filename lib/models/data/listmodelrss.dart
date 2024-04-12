@@ -14,8 +14,8 @@ class ListModelRSS {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['items'] = this.items.map((item) => item.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['items'] = items.map((item) => item.toJson()).toList();
     return data;
   }
 }
@@ -36,10 +36,10 @@ class RSSItem {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['title'] = this.title;
-    data['description'] = this.description;
-    data['link'] = this.link;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['title'] = title;
+    data['description'] = description;
+    data['link'] = link;
     return data;
   }
 }
