@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:news_flutter_app/common/navbar.dart';
 import 'package:news_flutter_app/pages/homepages/bookmarkscreen.dart';
-import 'package:news_flutter_app/pages/homepages/home_screen.dart';
+import 'package:news_flutter_app/pages/webviewpages/feed_home_screen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});

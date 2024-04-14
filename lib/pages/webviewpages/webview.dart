@@ -43,7 +43,6 @@ class _MyWebViewState extends State<MyWebView> {
             loadingPercentage = 100;
           });
         },
-        // Add from here...
         onNavigationRequest: (navigation) {
           final host = Uri.parse(navigation.url).host;
           if (host.contains('youtube.com')) {
@@ -104,11 +103,10 @@ class _WebViewWidgetState extends State<WebViewWidget> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Flutter WebView'),
-        // Add from here...
+        // This is the action bar on the top of the screen
         actions: [
           NavigationControls(controller: controller),
         ],
-        // ...to here.
       ),
       body: MyWebView(
         controller: controller,

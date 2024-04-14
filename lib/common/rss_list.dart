@@ -1,5 +1,5 @@
 const Map<String, String> baonhandanRssList = {
-  'Trang chủ': 'https://nhandan.vn/rss/home.rss',
+  //'Trang chủ': 'https://nhandan.vn/rss/home.rss',
   'Chính trị': 'https://nhandan.vn/rss/chinhtri-1171.rss',
   'Xã luận': 'https://nhandan.vn/rss/xa-luan-1176.rss',
   'Bình luận': 'https://nhandan.vn/rss/binh-luan-phe-phan-1180.rss',
@@ -25,14 +25,14 @@ const Map<String, String> vnexpressRssList = {
 
 class RssMapFile {
   List<Map<String, String>> rssMap = [
-    baonhandanRssList,
     vnexpressRssList,
+    baonhandanRssList,
   ];
 }
 
 class WebsitesList {
   List<Map<String, String>> websList = [
-    baonhandanRssList,
     vnexpressRssList,
+    baonhandanRssList,
   ];
 }
