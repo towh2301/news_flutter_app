@@ -55,6 +55,9 @@ dependencies:
     xml: ^6.5.0
     webfeed_revised: ^0.7.2
     google_nav_bar: ^5.0.6
+    flutter_facebook_auth: ^6.2.0
+    firebase_ui_oauth_facebook: ^1.2.19
+    webview_flutter: ^4.7.0
 
 dev_dependencies:
     flutter_test:

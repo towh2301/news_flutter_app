@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:news_flutter_app/pages/webviewpages/webview.dart';
 import 'package:webfeed_revised/webfeed_revised.dart';
 
 Future<List<RssItem>> fetchRssFeed(String url) async {
@@ -11,14 +12,15 @@ Future<List<RssItem>> fetchRssFeed(String url) async {
           title: item.title ?? '',
           link: item.link ?? '',
           pubDate: item.pubDate ?? DateTime.now(),
+          media: item.media,
         );
       }).toList() ??
       [];
 }
 
 class _WebFeed extends StatefulWidget {
-  final String url;
-  const _WebFeed(this.url);
+  final String url, category;
+  const _WebFeed(this.url, this.category, {super.key});
 
   @override
   State<_WebFeed> createState() => _WebFeedState();
@@ -45,9 +47,36 @@ class _WebFeedState extends State<_WebFeed> {
             itemBuilder: (context, index) {
               final item = rssItems[index];
               return ListTile(
-                title: Text(item.title ?? ''),
-                subtitle: Text(item.link ?? ''),
-                trailing: Text(item.pubDate.toString()),
+                leading: item.media != null
+                    ? const Icon(Icons.image, size: 40)
+                    : null,
+                title: GestureDetector(
+                  onTap: () async {
+                    await Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => WebViewWidget(
+                          url: item.link ?? '',
+                          category: widget.category,
+                          title: item.title ?? '',
+                        ),
+                      ),
+                    );
+                  },
+                  child: Text(
+                    item.title ?? '',
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
+                subtitle: Text(
+                  item.link ?? '\n${item.pubDate}',
+                  style: TextStyle(
+                    color: Colors.grey[600],
+                  ),
+                ),
+                isThreeLine: true,
               );
             },
           );
@@ -61,41 +90,9 @@ class _WebFeedState extends State<_WebFeed> {
   }
 }
 
-// class WebFeedView extends StatefulWidget {
-//   final String url, category;
-//   const WebFeedView(this.category, this.url, {super.key});
-
-//   @override
-//   State<WebFeedView> createState() => _WebFeedViewState();
-// }
-
-// class _WebFeedViewState extends State<WebFeedView> {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       backgroundColor: Colors.white,
-//       appBar: AppBar(
-//         title: Text(
-//           widget.category,
-//           style:
-//               const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-//         ),
-//       ),
-//       body: Center(child: _WebFeed(widget.url)),
-//     );
-//   }
-// }
-
 Future<Widget> webFeedView(String url, String category) async {
   return Scaffold(
     backgroundColor: Colors.white,
-    // appBar: AppBar(
-    //   title: Text(
-    //     category,
-    //     style:
-    //         const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-    //   ),
-    // ),
-    body: Center(child: _WebFeed(url)),
+    body: Center(child: _WebFeed(url, category)),
   );
 }

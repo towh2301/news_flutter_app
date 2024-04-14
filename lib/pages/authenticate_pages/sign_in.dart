@@ -1,8 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart' hide EmailAuthProvider;
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
+import 'package:firebase_ui_oauth_facebook/firebase_ui_oauth_facebook.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:news_flutter_app/pages/homepages/main_home_screen.dart';
 import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart';
 
@@ -31,6 +33,11 @@ class _AuthGateState extends State<AuthGate> {
                   'email',
                   'https://www.googleapis.com/auth/contacts.readonly',
                 ]),
+              ),
+              FacebookProvider(
+                clientId: 'f51edc50c1aa5b147042ad092ceee8e0',
+                redirectUri:
+                    'https://www.facebook.com/connect/login_success.html',
               ),
             ],
             headerBuilder: (context, constraints, shrinkOffset) {
@@ -75,4 +82,16 @@ class _AuthGateState extends State<AuthGate> {
       },
     );
   }
+}
+
+Future<UserCredential?> signInWithFacebook() async {
+  final LoginResult result = await FacebookAuth.instance.login();
+  if (result.status == LoginStatus.success) {
+    // Create a credential from the access token
+    final OAuthCredential credential =
+        FacebookAuthProvider.credential(result.accessToken!.token);
+    // Once signed in, return the UserCredential
+    return await FirebaseAuth.instance.signInWithCredential(credential);
+  }
+  return null;
 }

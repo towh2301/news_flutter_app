@@ -63,100 +63,100 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
         automaticallyImplyLeading: false,
       ),
-      body: Container(
-        child: Column(
-          children: <Widget>[
-            Flexible(
-              child: ListView.builder(
-                padding: const EdgeInsets.only(
-                    top: 5, bottom: 5, right: 16, left: 16),
-                scrollDirection: Axis.horizontal,
-                itemCount: _categories?.length,
-                itemBuilder: (context, index) {
-                  final category = _categories?.keys.elementAt(index);
-                  final url = _categories?[category];
-                  return Row(
-                    children: <Widget>[
-                      Container(
-                        width: 130,
-                        height: 54,
-                        decoration: BoxDecoration(
+      body: Column(
+        children: <Widget>[
+          Flexible(
+            child: ListView.builder(
+              padding:
+                  const EdgeInsets.only(top: 5, bottom: 5, right: 16, left: 16),
+              scrollDirection: Axis.horizontal,
+              itemCount: _categories?.length,
+              itemBuilder: (context, index) {
+                final category = _categories?.keys.elementAt(index);
+                final url = _categories?[category];
+                final isSelected = (_selectedIndex == index);
+                return Row(
+                  children: <Widget>[
+                    Container(
+                      width: 130,
+                      height: 52,
+                      decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(20),
-                          color: const Color.fromARGB(255, 88, 166, 255),
-                        ),
-                        alignment: Alignment.topCenter,
-                        margin:
-                            const EdgeInsets.only(right: 20, top: 5, bottom: 5),
-                        child: ListTile(
-                          title: Text(
-                            category ?? '',
-                            textAlign: TextAlign.center,
-                            style: const TextStyle(
-                              color: Colors.white,
-                            ),
+                          color: isSelected ? Colors.blue : Colors.white),
+                      alignment: Alignment.center,
+                      margin:
+                          const EdgeInsets.only(right: 20, top: 5, bottom: 5),
+                      child: ListTile(
+                        title: Text(
+                          category ?? '',
+                          textAlign: TextAlign.center,
+                          textDirection: TextDirection.ltr,
+                          style: TextStyle(
+                            color: isSelected ? Colors.white : Colors.black,
                           ),
-                          onTap: () {
-                            navigateBottomBar(index, url!, category!);
-                          },
                         ),
+                        splashColor: Colors.white,
+                        onTap: () {
+                          navigateBottomBar(index, url!, category!);
+                        },
                       ),
-                    ],
-                  );
-                },
-              ),
+                    ),
+                  ],
+                );
+              },
             ),
-            Expanded(
-              flex: 7,
-              child: FutureBuilder(
-                future: webFeedView(_url, _category),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const CircularProgressIndicator();
-                  } else if (snapshot.hasError) {
-                    return Text('Error: ${snapshot.error}');
-                  } else {
-                    return snapshot.data!;
-                  }
-                },
-              ),
+          ),
+          Expanded(
+            flex: 7,
+            child: FutureBuilder(
+              future: webFeedView(_url, _category),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const CircularProgressIndicator();
+                } else if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                } else {
+                  return snapshot.data!;
+                }
+              },
             ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void goToProfile(context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute<ProfileScreen>(
+        builder: (context) => ProfileScreen(
+          appBar: AppBar(
+            title: const Text(
+              'Profile',
+              textAlign: TextAlign.left,
+            ),
+          ),
+          avatarPlaceholderColor: Colors.blue[600],
+          actions: [
+            SignedOutAction(
+              (context) {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+          children: [
+            const Divider(),
+            Padding(
+              padding: const EdgeInsets.all(2),
+              child: AspectRatio(
+                aspectRatio: 1,
+                child: Image.asset('assets/images/verify.png'),
+              ),
+            )
           ],
         ),
       ),
     );
   }
-}
-
-void goToProfile(context) {
-  Navigator.push(
-    context,
-    MaterialPageRoute<ProfileScreen>(
-      builder: (context) => ProfileScreen(
-        appBar: AppBar(
-          title: const Text(
-            'Profile',
-            textAlign: TextAlign.left,
-          ),
-        ),
-        avatarPlaceholderColor: Colors.blue[600],
-        actions: [
-          SignedOutAction(
-            (context) {
-              Navigator.of(context).pop();
-            },
-          ),
-        ],
-        children: [
-          const Divider(),
-          Padding(
-            padding: const EdgeInsets.all(2),
-            child: AspectRatio(
-              aspectRatio: 1,
-              child: Image.asset('assets/images/verify.png'),
-            ),
-          )
-        ],
-      ),
-    ),
-  );
 }

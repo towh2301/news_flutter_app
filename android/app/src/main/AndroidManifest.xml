@@ -1,8 +1,18 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.INTERNET" />
     <application
         android:label="news_flutter_app"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+
+        <!-- <meta-data
+           android:name="com.facebook.sdk.ApplicationId"
+           android:value="@string/1432851750676466" />
+       <meta-data 
+           android:name="com.facebook.sdk.ClientToken" 
+           android:value="@string/f51edc50c1aa5b147042ad092ceee8e0"/> -->
+
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -40,5 +50,6 @@
             <action android:name="android.intent.action.PROCESS_TEXT"/>
             <data android:mimeType="text/plain"/>
         </intent>
+        <provider android:authorities="com.facebook.katana.provider.PlatformProvider" />
     </queries>
 </manifest>
