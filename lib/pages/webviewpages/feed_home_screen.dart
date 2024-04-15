@@ -15,7 +15,9 @@ class _HomeScreenState extends State<HomeScreen> {
   // I will config for multiple list of websites later
 
   final List<Map<String, String>> websites = RssMapFile().rssMap;
+  final websiteMap = WebsitesList().websList;
   Map<String, String>? _categories;
+  late String _websiteName = '';
 
   // Set index for page
   int _selectedIndex = 0;
@@ -36,6 +38,57 @@ class _HomeScreenState extends State<HomeScreen> {
     _categories = _getCategories();
     _url = _categories!.values.elementAt(0);
     _category = _categories!.keys.elementAt(0);
+    _websiteName = websiteMap.keys.elementAt(0);
+  }
+
+  Drawer sideBarCustom(context, Map websiteMap) {
+    return Drawer(
+      // Add a ListView to the drawer. This ensures the user can scroll
+      // through the options in the drawer if there isn't enough vertical
+      // space to fit everything.
+      child: ListView(
+        // Important: Remove any padding from the ListView.
+        padding: EdgeInsets.zero,
+        children: [
+          const SizedBox(
+            height: 100,
+            child: DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.blue,
+                shape: BoxShape.rectangle,
+              ),
+              child: Text(
+                'List of Websites',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 20,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ),
+          for (var website in websiteMap.entries)
+            ListTile(
+              title: Text(
+                website.key,
+                style: const TextStyle(
+                  color: Colors.black,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              onTap: () {
+                setState(() {
+                  _websiteName = website.key;
+                  _categories = website.value;
+                  _url = _categories!.values.elementAt(0);
+                  _category = _categories!.keys.elementAt(0);
+                });
+                Navigator.pop(context);
+              },
+            ),
+        ],
+      ),
+    );
   }
 
   _getCategories() {
@@ -49,9 +102,9 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text(
-          'Home Screen',
-          style: TextStyle(
+        title: Text(
+          _websiteName,
+          style: const TextStyle(
             color: Colors.black,
           ),
         ),
@@ -61,14 +114,12 @@ class _HomeScreenState extends State<HomeScreen> {
             icon: const Icon(Icons.person),
           )
         ],
-        automaticallyImplyLeading: false,
       ),
       body: Column(
         children: <Widget>[
           Flexible(
             child: ListView.builder(
-              padding:
-                  const EdgeInsets.only(top: 5, bottom: 5, right: 16, left: 16),
+              padding: const EdgeInsets.only(top: 10, left: 10),
               scrollDirection: Axis.horizontal,
               itemCount: _categories?.length,
               itemBuilder: (context, index) {
@@ -79,20 +130,20 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: <Widget>[
                     Container(
                       width: 130,
-                      height: 52,
+                      height: 60,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(20),
                           color: isSelected ? Colors.blue : Colors.white),
                       alignment: Alignment.center,
-                      margin:
-                          const EdgeInsets.only(right: 20, top: 5, bottom: 5),
+                      margin: const EdgeInsets.only(right: 10),
                       child: ListTile(
                         title: Text(
-                          category ?? '',
                           textAlign: TextAlign.center,
+                          category ?? '',
                           textDirection: TextDirection.ltr,
                           style: TextStyle(
                             color: isSelected ? Colors.white : Colors.black,
+                            fontSize: 14,
                           ),
                         ),
                         splashColor: Colors.white,
@@ -110,6 +161,7 @@ class _HomeScreenState extends State<HomeScreen> {
             flex: 7,
             child: FutureBuilder(
               future: webFeedView(_url, _category),
+              //future: webFeedViewTest(_url, _category),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const CircularProgressIndicator();
@@ -123,6 +175,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
+      drawer: sideBarCustom(context, websiteMap),
     );
   }
 

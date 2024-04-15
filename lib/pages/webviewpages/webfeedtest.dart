@@ -3,22 +3,23 @@ import 'package:flutter/material.dart';
 import 'package:webfeed_revised/domain/rss_feed.dart';
 import 'package:http/http.dart' as http;
 
-class RSSFeed extends StatefulWidget {
-  final String url;
+class MyRSSFeed extends StatefulWidget {
+  final String url, category;
 
-  const RSSFeed({super.key, required this.url});
+  const MyRSSFeed(this.url, this.category, {super.key});
 
   @override
-  State<RSSFeed> createState() => _RSSFeedState();
+  State<MyRSSFeed> createState() => _MyRSSFeedState();
 }
 
-class _RSSFeedState extends State<RSSFeed> {
+class _MyRSSFeedState extends State<MyRSSFeed> {
   // Initialize feed and title
   late RssFeed _feed;
   late String _title;
   static const feedLoadErrorMsg = 'Failed to load feed';
   static const feedLoadSuccessMsg = 'Feed loaded successfully';
   static const feedLoadMsg = 'Loading feed...';
+  late GlobalKey<RefreshIndicatorState> _refreshKey;
 
   // Update feed
   void updateFeed(RssFeed feed) {
@@ -93,7 +94,7 @@ class _RSSFeedState extends State<RSSFeed> {
         final item = _feed.items?[index];
         return ListTile(
           title: title(item?.title),
-          subtitle: subtitle(item?.pubDate),
+          subtitle: subtitle(item?.pubDate.toString()),
           leading: thumbnail(item!.enclosure?.url),
           trailing: rightIcon(),
           contentPadding: const EdgeInsets.all(5.0),
@@ -112,7 +113,11 @@ class _RSSFeedState extends State<RSSFeed> {
         ? const Center(
             child: CircularProgressIndicator(),
           )
-        : list();
+        : RefreshIndicator(
+            child: list(),
+            onRefresh: () => load(),
+            key: _refreshKey,
+          );
   }
 
   // Load feed with error handling
@@ -133,10 +138,20 @@ class _RSSFeedState extends State<RSSFeed> {
     super.initState();
     updateTitle(feedLoadMsg);
     load();
+    _refreshKey = GlobalKey<RefreshIndicatorState>();
   }
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.category),
+      ),
+      body: body(),
+    );
   }
+}
+
+Future<Widget> webFeedViewTest(String url, String category) async {
+  return MyRSSFeed(url, category);
 }

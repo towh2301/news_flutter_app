@@ -1,7 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:news_flutter_app/pages/webviewpages/webview.dart';
 import 'package:webfeed_revised/webfeed_revised.dart';
+import 'package:xml/xml.dart';
 
 class _WebFeed extends StatefulWidget {
   final String url, category;
@@ -14,28 +16,12 @@ class _WebFeed extends StatefulWidget {
 class _WebFeedState extends State<_WebFeed> {
   late Future<List<RssItem>> _rssItems;
   // Initialize feed and title
-  late RssFeed _feed;
-  late String _title;
-  static const feedLoadErrorMsg = 'Failed to load feed';
-  static const feedLoadSuccessMsg = 'Feed loaded successfully';
-  static const feedLoadMsg = 'Loading feed...';
+  // static const feedLoadErrorMsg = 'Failed to load feed';
+  // static const feedLoadSuccessMsg = 'Feed loaded successfully';
+  // static const feedLoadMsg = 'Loading feed...';
   static const placeholderImage = 'assets/images/placeholder.png';
   late GlobalKey<RefreshIndicatorState> _refreshKey;
   late int _selectedIndex;
-
-  // Update feed
-  void updateFeed(RssFeed feed) {
-    setState(() {
-      _feed = feed;
-    });
-  }
-
-  // Update title
-  void updateTitle(String title) {
-    setState(() {
-      _title = title;
-    });
-  }
 
   // Load feed with error handling
   Future<RssFeed> loadFeed() async {
@@ -48,32 +34,23 @@ class _WebFeedState extends State<_WebFeed> {
     }
   }
 
-  // Load
-  load() async {
-    loadFeed().then((result) {
-      if (result.toString().isEmpty) {
-        updateTitle(feedLoadErrorMsg);
-        return;
-      }
-      updateFeed(result);
-      updateTitle(_feed.title ?? feedLoadSuccessMsg);
-    });
-  }
-
   // Fetch RSS feed
   Future<List<RssItem>> fetchRssFeed(String url) async {
-    final response = await http.get(Uri.parse(url));
-    final feed = RssFeed.parse(response.body);
-
-    return feed.items?.map((item) {
-          return RssItem(
-            title: item.title ?? '',
-            link: item.link ?? '',
-            pubDate: item.pubDate ?? DateTime.now(),
-            enclosure: item.enclosure,
-          );
-        }).toList() ??
-        [];
+    try {
+      final response = await http.get(Uri.parse(url));
+      final feed = RssFeed.parse(response.body);
+      return feed.items?.map((item) {
+            return RssItem(
+              title: item.title ?? '',
+              link: item.link ?? '',
+              pubDate: item.pubDate ?? DateTime.now(),
+              enclosure: item.enclosure,
+            );
+          }).toList() ??
+          [];
+    } catch (e) {
+      throw Exception('Failed to fetch RSS feed');
+    }
   }
 
   // Load thumbnail
@@ -176,20 +153,35 @@ class _WebFeedState extends State<_WebFeed> {
           return const Center(child: Text('No items found'));
         } else {
           return ListTile(
-            leading: thumbnail(item.enclosure?.url ?? 'null'),
-            title: title(item.title, item.link ?? ''),
+            leading: thumbnail(item.enclosure?.url ?? ' '),
+            title: title(item.title, item.link ?? ' '),
             subtitle: subtitle(item.link ?? '\n${item.pubDate}'),
             trailing: rightIcon(),
-            contentPadding: const EdgeInsets.all(5.0),
-            onTap: () {
+            contentPadding: const EdgeInsets.all(10.0),
+            onTap: () async {
               setState(() {
                 _selectedIndex = index;
               });
+              openFeed(item.link ?? '', item.title ?? '');
             },
           );
         }
       },
     );
+  }
+
+  // Open feed
+  Future<void> openFeed(url, title) async {
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => MyWebView(
+          url: url,
+          category: widget.category,
+          title: 'Feed',
+        ),
+      ),
+    );
+    debugPrint('Tapped on $url');
   }
 
   @override
