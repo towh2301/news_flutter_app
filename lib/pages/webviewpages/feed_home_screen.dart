@@ -119,7 +119,7 @@ class _HomeScreenState extends State<HomeScreen> {
         children: <Widget>[
           Flexible(
             child: ListView.builder(
-              padding: const EdgeInsets.only(top: 10, left: 10),
+              padding: const EdgeInsets.all(10),
               scrollDirection: Axis.horizontal,
               itemCount: _categories?.length,
               itemBuilder: (context, index) {
@@ -158,7 +158,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           Expanded(
-            flex: 7,
+            flex: 6,
             child: FutureBuilder(
               future: webFeedView(_url, _category),
               //future: webFeedViewTest(_url, _category),

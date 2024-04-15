@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:news_flutter_app/pages/webviewpages/webview.dart';
 import 'package:webfeed_revised/webfeed_revised.dart';
-import 'package:xml/xml.dart';
+import 'package:html/parser.dart' as parser;
 
 class _WebFeed extends StatefulWidget {
   final String url, category;
@@ -21,7 +21,7 @@ class _WebFeedState extends State<_WebFeed> {
   // static const feedLoadMsg = 'Loading feed...';
   static const placeholderImage = 'assets/images/placeholder.png';
   late GlobalKey<RefreshIndicatorState> _refreshKey;
-  late int _selectedIndex;
+  late String imageUrl;
 
   // Load feed with error handling
   Future<RssFeed> loadFeed() async {
@@ -56,11 +56,10 @@ class _WebFeedState extends State<_WebFeed> {
   // Load thumbnail
   thumbnail(imageUrl) {
     if (imageUrl == 'null') {
-      // eturn ;
       return Padding(
         padding: const EdgeInsets.only(left: 15.0),
         child: Image.asset(
-          'assets/images/placeholder.png',
+          placeholderImage,
           height: 70,
           width: 80,
           alignment: Alignment.center,
@@ -71,8 +70,7 @@ class _WebFeedState extends State<_WebFeed> {
       return Padding(
         padding: const EdgeInsets.only(left: 15.0),
         child: CachedNetworkImage(
-          placeholder: (context, url) =>
-              Image.asset('assets/images/placeholder.png'),
+          placeholder: (context, url) => Image.asset(placeholderImage),
           imageUrl: imageUrl,
           height: 70,
           width: 80,
@@ -85,27 +83,6 @@ class _WebFeedState extends State<_WebFeed> {
 
   // Load title
   title(title, url) {
-    // return GestureDetector(
-    //   onTap: () async {
-    //     // await Navigator.of(context).push(
-    //     //   MaterialPageRoute(
-    //     //     builder: (context) => WebViewWidget(
-    //     //       url: item.link ?? '',
-    //     //       category: widget.category,
-    //     //       title: item.title ?? '',
-    //     //     ),
-    //     //   ),
-    //     // );
-    //     debugPrint('Tapped on $url');
-    //   },
-    //   child: Text(
-    //     title,
-    //     style: const TextStyle(fontSize: 14.0, fontWeight: FontWeight.w500),
-    //     maxLines: 2,
-    //     overflow: TextOverflow.ellipsis,
-    //   ),
-    // );
-
     return Text(
       title,
       style: const TextStyle(fontSize: 14.0, fontWeight: FontWeight.w500),
@@ -148,26 +125,46 @@ class _WebFeedState extends State<_WebFeed> {
     return ListView.builder(
       itemCount: rssItems.length,
       itemBuilder: (context, index) {
-        final item = rssItems[index];
-        if (rssItems.isEmpty) {
-          return const Center(child: Text('No items found'));
-        } else {
-          return ListTile(
-            leading: thumbnail(item.enclosure?.url ?? ' '),
-            title: title(item.title, item.link ?? ' '),
-            subtitle: subtitle(item.link ?? '\n${item.pubDate}'),
-            trailing: rightIcon(),
-            contentPadding: const EdgeInsets.all(10.0),
-            onTap: () async {
-              setState(() {
-                _selectedIndex = index;
-              });
-              openFeed(item.link ?? '', item.title ?? '');
-            },
-          );
-        }
+        var item = rssItems[index];
+        return FutureBuilder(
+          future: fetchImageFromPage(item.link ?? ''),
+          builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              return Text('Error: ${snapshot.error}');
+            } else {
+              var imageUrl = snapshot.data ?? 'null';
+              if (imageUrl.toString().startsWith('data')) {
+                imageUrl = 'null';
+              }
+              return ListTile(
+                leading: thumbnail(item.enclosure?.url ?? imageUrl ?? 'null'),
+                title: title(item.title, item.link ?? ' '),
+                subtitle: subtitle(item.link ?? '\n${item.pubDate}'),
+                trailing: rightIcon(),
+                contentPadding: const EdgeInsets.all(10.0),
+                onTap: () async {
+                  setState(() {});
+                  openFeed(item.link ?? '', item.title ?? '');
+                },
+              );
+            }
+          },
+        );
       },
     );
+  }
+
+  dynamic fetchImageFromPage(url) async {
+    try {
+      final response = await http.get(Uri.parse(url));
+      final document = parser.parse(response.body);
+      final imgElement = document.getElementsByTagName('img').first;
+
+      print('Image URL: ${imgElement.attributes['src']}');
+      return imgElement.attributes['src'].toString();
+    } catch (e) {
+      throw Exception('Failed to fetch image');
+    }
   }
 
   // Open feed
@@ -189,7 +186,6 @@ class _WebFeedState extends State<_WebFeed> {
     super.initState();
     _rssItems = fetchRssFeed(widget.url);
     _refreshKey = GlobalKey<RefreshIndicatorState>();
-    _selectedIndex = 0;
   }
 
   @override
