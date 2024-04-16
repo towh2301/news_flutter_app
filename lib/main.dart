@@ -26,7 +26,7 @@ class MyNewsApp extends StatelessWidget {
       home: checkAuth(),
       routes: {
         '/onboarding': (context) => const OnBoardingScreen(),
-        '/authgate': (context) => const AuthGate(),
+        '/authgate': (context) => const SignInScreen(),
       },
     );
   }
@@ -34,7 +34,7 @@ class MyNewsApp extends StatelessWidget {
 
 Widget checkAuth() {
   if (FirebaseAuth.instance.currentUser != null) {
-    return (const AuthGate());
+    return (const SignInScreen());
   } else {
     return (const OnBoardingScreen());
   }

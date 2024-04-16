@@ -8,14 +8,14 @@ import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:news_flutter_app/pages/homepages/main_home_screen.dart';
 import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart';
 
-class AuthGate extends StatefulWidget {
-  const AuthGate({super.key});
+class SignInScreen extends StatefulWidget {
+  const SignInScreen({super.key});
 
   @override
-  State<AuthGate> createState() => _AuthGateState();
+  State<SignInScreen> createState() => _SignInScreenState();
 }
 
-class _AuthGateState extends State<AuthGate> {
+class _SignInScreenState extends State<SignInScreen> {
   @override
   Widget build(BuildContext context) {
     // This is for the authentication gate
