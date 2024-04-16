@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 class ListModelRSS {
   List<RSSItem> items;
 
@@ -23,36 +21,40 @@ class ListModelRSS {
 }
 
 class RSSItem {
+  String id;
   String title;
   String description;
   String link;
   String pubDate;
-  Image? image;
+  String imageLink;
 
   RSSItem({
+    required this.id,
     required this.title,
     required this.description,
     required this.link,
-    required this.image,
+    required this.imageLink,
     required this.pubDate, // Add an initializer expression for the 'pubDate' field
   });
 
   factory RSSItem.fromJson(Map<String, dynamic> json) {
     return RSSItem(
+      id: json['id'],
       title: json['title'],
       description: json['description'],
       link: json['link'],
-      image: json['image'],
       pubDate: json['pubDate'],
+      imageLink: json['imageLink'] ?? 'null',
     );
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
     data['title'] = title;
     data['description'] = description;
     data['link'] = link;
-    data['image'] = image;
+    data['imageLink'] = imageLink;
     data['pubDate'] = pubDate;
     return data;
   }
