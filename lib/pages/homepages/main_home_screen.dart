@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:news_flutter_app/common/navbar.dart';
 import 'package:news_flutter_app/models/data/bookmarks_model.dart';
@@ -14,6 +15,7 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   // Index for the bottom navigation bar
   int _selectedIndex = 0;
+  late User? user;
 
   void navigateBottomBar(int index) {
     setState(() {
@@ -31,7 +33,13 @@ class _MainScreenState extends State<MainScreen> {
   void initState() {
     super.initState();
     _selectedIndex = 0;
-    MyData.initializeData();
+
+    // Get logged in user
+    user = FirebaseAuth.instance.currentUser;
+
+    // Initialize the bookmarks of the user
+    MyData.initializeData(user!);
+    print('User: $user');
   }
 
   @override
