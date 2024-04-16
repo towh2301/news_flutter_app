@@ -11,9 +11,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  // For now, I just have one list of websites: websites[0]
-  // I will config for multiple list of websites later
-
+  // Initialize the list of websites
   final List<Map<String, String>> websites = RssMapFile().rssMap;
   final websiteMap = WebsitesList().websList;
   Map<String, String>? _categories;
