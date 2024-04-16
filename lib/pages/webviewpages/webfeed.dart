@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:news_flutter_app/models/data/bookmarks_model.dart';
@@ -23,6 +24,7 @@ class _WebFeedState extends State<_WebFeed> {
   late String imageUrl;
   late int bookmarkIndex = 0;
   late Map<String, RSSItem> rssItemsMap = {};
+  late User? _user;
 
   // Load feed with error handling
   Future<RssFeed> loadFeed() async {
@@ -131,7 +133,7 @@ class _WebFeedState extends State<_WebFeed> {
   // Set bookmark index
   setBookmarkIndex(int index, RSSItem item) {
     bookmarkIndex = index;
-    MyData.toggleBookmark(item);
+    MyData.toggleBookmark(item, _user!);
   }
 
   // Load list
@@ -159,11 +161,11 @@ class _WebFeedState extends State<_WebFeed> {
               // Create RSS item
               RSSItem rssItem = RSSItem(
                 id: id,
-                title: item.title,
-                description: item.description ?? '',
-                link: item.link,
+                title: item.title ?? 'null',
+                description: item.description ?? 'null',
+                link: item.link ?? 'null',
                 pubDate: item.pubDate.toString(),
-                imageLink: imageUrl,
+                imageLink: imageUrl ?? 'null',
               );
 
               // Add RSS item to map
@@ -216,6 +218,7 @@ class _WebFeedState extends State<_WebFeed> {
     super.initState();
     _rssItems = fetchRssFeed(widget.url);
     _refreshKey = GlobalKey<RefreshIndicatorState>();
+    _user = FirebaseAuth.instance.currentUser;
   }
 
   @override

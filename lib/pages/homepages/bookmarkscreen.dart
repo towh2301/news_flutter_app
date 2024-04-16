@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:news_flutter_app/models/data/bookmarks_model.dart';
 import 'package:news_flutter_app/models/data/listmodelrss.dart';
@@ -13,6 +14,7 @@ class BookmarkScreen extends StatefulWidget {
 
 class _BookmarkScreenState extends State<BookmarkScreen> {
   static const placeholderImage = 'assets/images/placeholder.png';
+  late User? _user;
 
 // Load thumbnail
   thumbnail(imageUrl) {
@@ -89,7 +91,7 @@ class _BookmarkScreenState extends State<BookmarkScreen> {
 
   // Set bookmark index
   setBookmarkIndex(RSSItem item) {
-    MyData.toggleBookmark(item);
+    MyData.toggleBookmark(item, _user!);
   }
 
   // Open feed
@@ -123,6 +125,14 @@ class _BookmarkScreenState extends State<BookmarkScreen> {
         );
       },
     );
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _user = FirebaseAuth.instance.currentUser;
+    MyData.initializeData(_user!);
   }
 
   @override

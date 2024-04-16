@@ -1,24 +1,27 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:news_flutter_app/models/data/listmodelrss.dart';
-
-class Bookmark {
-  final String id;
-  final String userId;
-  final String newsId;
-
-  Bookmark(this.id, this.userId, this.newsId);
-
-  Bookmark.fromJson(Map<String, dynamic> json)
-      : id = json['id'],
-        userId = json['userId'],
-        newsId = json['newsId'];
-}
 
 // Should be initialized with the data from the database
 class MyData {
   static Map<String, RSSItem> bookmarksMap = {};
 
-  static void initializeData() {
-    bookmarksMap = {};
+  static void initializeData(User user) async {
+    // Get bookmarks from the database
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+    print('User id: ${user.email}');
+    await firestore
+        .collection('bookmarks')
+        .where('userEmail', isEqualTo: user.email)
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      for (var doc in querySnapshot.docs) {
+        RSSItem item = RSSItem.fromJson(doc.data() as Map<String, dynamic>);
+        print("itemssssss: ${item}");
+        addBookmark(item);
+      }
+    });
   }
 
   static void addBookmark(RSSItem item) {
@@ -41,15 +44,41 @@ class MyData {
     bookmarksMap = {};
   }
 
-  static void toggleBookmark(RSSItem item) {
+  static void toggleBookmark(RSSItem item, User user) {
     if (isBookmarked(item)) {
       removeBookmark(item);
+      removeBookmarkFromFirebase(user, item);
     } else {
       addBookmark(item);
+      addBookmarkToFirebase(user, item);
     }
   }
 
-  static void saveBookmarks() {
-    // Save bookmarks to the database with the user id
+  static void removeBookmarkFromFirebase(User user, RSSItem item) {
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    firestore
+        .collection('bookmarks')
+        .where('userEmail', isEqualTo: user.email)
+        .where('newsId', isEqualTo: item.id)
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      for (var doc in querySnapshot.docs) {
+        doc.reference.delete();
+      }
+    });
+  }
+
+  static void addBookmarkToFirebase(User user, RSSItem item) {
+    // Add the bookmark
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    firestore.collection('bookmarks').add({
+      'userEmail': user.email,
+      'newsId': item.id,
+      'title': item.title,
+      'description': item.description,
+      'link': item.link,
+      'imageLink': item.imageLink,
+      'pubDate': item.pubDate,
+    });
   }
 }

@@ -39,7 +39,7 @@ class RSSItem {
 
   factory RSSItem.fromJson(Map<String, dynamic> json) {
     return RSSItem(
-      id: json['id'],
+      id: json['newsId'],
       title: json['title'],
       description: json['description'],
       link: json['link'],
