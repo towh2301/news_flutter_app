@@ -2,8 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:news_flutter_app/common/navbar.dart';
 import 'package:news_flutter_app/models/data/bookmarks_model.dart';
-import 'package:news_flutter_app/pages/homepages/bookmarkscreen.dart';
 import 'package:news_flutter_app/pages/webviewpages/feed_home_screen.dart';
+import 'package:news_flutter_app/pages/webviewpages/bookmarkscreen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
