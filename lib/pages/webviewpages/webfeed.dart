@@ -1,7 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:news_flutter_app/models/data/bookmarks_model.dart';
+import 'package:news_flutter_app/models/data/listmodelrss.dart';
 import 'package:news_flutter_app/pages/webviewpages/webview.dart';
+import 'package:tiengviet/tiengviet.dart';
 import 'package:webfeed_revised/webfeed_revised.dart';
 import 'package:html/parser.dart' as parser;
 
@@ -15,13 +18,11 @@ class _WebFeed extends StatefulWidget {
 
 class _WebFeedState extends State<_WebFeed> {
   late Future<List<RssItem>> _rssItems;
-  // Initialize feed and title
-  // static const feedLoadErrorMsg = 'Failed to load feed';
-  // static const feedLoadSuccessMsg = 'Feed loaded successfully';
-  // static const feedLoadMsg = 'Loading feed...';
   static const placeholderImage = 'assets/images/placeholder.png';
   late GlobalKey<RefreshIndicatorState> _refreshKey;
   late String imageUrl;
+  late int bookmarkIndex = 0;
+  late Map<String, RSSItem> rssItemsMap = {};
 
   // Load feed with error handling
   Future<RssFeed> loadFeed() async {
@@ -55,30 +56,37 @@ class _WebFeedState extends State<_WebFeed> {
 
   // Load thumbnail
   thumbnail(imageUrl) {
-    if (imageUrl == 'null') {
-      return Padding(
-        padding: const EdgeInsets.only(left: 15.0),
-        child: Image.asset(
-          placeholderImage,
-          height: 70,
-          width: 80,
-          alignment: Alignment.center,
-          fit: BoxFit.fill,
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: const Color.fromARGB(255, 0, 0, 0),
+          width: 1,
         ),
-      );
-    } else {
-      return Padding(
-        padding: const EdgeInsets.only(left: 15.0),
-        child: CachedNetworkImage(
-          placeholder: (context, url) => Image.asset(placeholderImage),
-          imageUrl: imageUrl,
-          height: 70,
-          width: 80,
-          alignment: Alignment.center,
-          fit: BoxFit.fill,
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(10.0),
+        child: SizedBox.fromSize(
+          size: const Size.fromRadius(40),
+          child: imageUrl == 'null'
+              ? Image.asset(
+                  placeholderImage,
+                  height: 70,
+                  width: 80,
+                  alignment: Alignment.center,
+                  fit: BoxFit.fill,
+                )
+              : CachedNetworkImage(
+                  placeholder: (context, url) => Image.asset(placeholderImage),
+                  imageUrl: imageUrl,
+                  height: 80,
+                  width: 80,
+                  alignment: Alignment.center,
+                  fit: BoxFit.fill,
+                ),
         ),
-      );
-    }
+      ),
+    );
   }
 
   // Load title
@@ -102,22 +110,28 @@ class _WebFeedState extends State<_WebFeed> {
   }
 
   // Load right icon
-  rightIcon() {
+  rightIcon(int index, RSSItem item) {
     bool isClicked = false;
     return GestureDetector(
       onTap: () {
         setState(() {
-          isClicked = !isClicked;
+          setBookmarkIndex(index, item);
         });
       },
-      child: setRightIcon(isClicked),
+      child: setRightIcon(isClicked, index, item),
     );
   }
 
-  setRightIcon(isClicked) {
-    return isClicked
-        ? const Icon(Icons.star)
-        : const Icon(Icons.star_border_outlined);
+  setRightIcon(isClicked, index, RSSItem item) {
+    return MyData.isBookmarked(item)
+        ? const Icon(Icons.bookmark, color: Colors.blue)
+        : const Icon(Icons.bookmark_border, color: Colors.blue);
+  }
+
+  // Set bookmark index
+  setBookmarkIndex(int index, RSSItem item) {
+    bookmarkIndex = index;
+    MyData.toggleBookmark(item);
   }
 
   // Load list
@@ -132,19 +146,38 @@ class _WebFeedState extends State<_WebFeed> {
             if (snapshot.hasError) {
               return Text('Error: ${snapshot.error}');
             } else {
-              var imageUrl = snapshot.data ?? 'null';
+              // Load image URL
+              var imageUrl = item.enclosure?.url ?? snapshot.data ?? 'null';
               if (imageUrl.toString().startsWith('data')) {
                 imageUrl = 'null';
               }
+
+              // Generate unique ID
+              var id =
+                  TiengViet.parse(item.title).toLowerCase().replaceAll(' ', '');
+
+              // Create RSS item
+              RSSItem rssItem = RSSItem(
+                id: id,
+                title: item.title,
+                description: item.description ?? '',
+                link: item.link,
+                pubDate: item.pubDate.toString(),
+                imageLink: imageUrl,
+              );
+
+              // Add RSS item to map
+              rssItemsMap[id] = rssItem;
+
               return ListTile(
-                leading: thumbnail(item.enclosure?.url ?? imageUrl ?? 'null'),
-                title: title(item.title, item.link ?? ' '),
-                subtitle: subtitle(item.link ?? '\n${item.pubDate}'),
-                trailing: rightIcon(),
+                leading: thumbnail(imageUrl),
+                title: title(rssItem.title, rssItem.link),
+                subtitle: subtitle(rssItem.link),
+                trailing: rightIcon(index, rssItem),
                 contentPadding: const EdgeInsets.all(10.0),
                 onTap: () async {
                   setState(() {});
-                  openFeed(item.link ?? '', item.title ?? '');
+                  openFeed(rssItem.link, rssItem.title);
                 },
               );
             }
@@ -159,8 +192,6 @@ class _WebFeedState extends State<_WebFeed> {
       final response = await http.get(Uri.parse(url));
       final document = parser.parse(response.body);
       final imgElement = document.getElementsByTagName('img').first;
-
-      print('Image URL: ${imgElement.attributes['src']}');
       return imgElement.attributes['src'].toString();
     } catch (e) {
       throw Exception('Failed to fetch image');
@@ -173,7 +204,6 @@ class _WebFeedState extends State<_WebFeed> {
       MaterialPageRoute(
         builder: (context) => MyWebView(
           url: url,
-          category: widget.category,
           title: 'Feed',
         ),
       ),
@@ -190,30 +220,33 @@ class _WebFeedState extends State<_WebFeed> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<RssItem>>(
-      future: _rssItems,
-      builder: (context, snapshot) {
-        // Check if snapshot has data
-        if (snapshot.hasData) {
-          final rssItems = snapshot.data!;
+    return Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: FutureBuilder<List<RssItem>>(
+        future: _rssItems,
+        builder: (context, snapshot) {
+          // Check if snapshot has data
+          if (snapshot.hasData) {
+            final rssItems = snapshot.data!;
 
-          // Load feed with method
-          return RefreshIndicator(
-            key: _refreshKey,
-            child: list(rssItems),
-            onRefresh: () async {
-              await Future.delayed(const Duration(seconds: 1));
-              setState(() {
-                _rssItems = fetchRssFeed(widget.url);
-              });
-            },
-          );
-        } else if (snapshot.hasError) {
-          return Text('Error: ${snapshot.error}');
-        } else {
-          return const CircularProgressIndicator();
-        }
-      },
+            // Load feed with method
+            return RefreshIndicator(
+              key: _refreshKey,
+              child: list(rssItems),
+              onRefresh: () async {
+                await Future.delayed(const Duration(seconds: 1));
+                setState(() {
+                  _rssItems = fetchRssFeed(widget.url);
+                });
+              },
+            );
+          } else if (snapshot.hasError) {
+            return Text('Error: ${snapshot.error}');
+          } else {
+            return const CircularProgressIndicator();
+          }
+        },
+      ),
     );
   }
 }

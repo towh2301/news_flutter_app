@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class MyWebView extends StatefulWidget {
-  final String url, category, title;
+  final String url, title;
   const MyWebView({
     super.key,
     required this.url,
-    required this.category,
     required this.title,
   });
 

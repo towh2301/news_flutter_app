@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:news_flutter_app/common/navbar.dart';
+import 'package:news_flutter_app/models/data/bookmarks_model.dart';
 import 'package:news_flutter_app/pages/homepages/bookmarkscreen.dart';
 import 'package:news_flutter_app/pages/webviewpages/feed_home_screen.dart';
 
@@ -30,6 +31,7 @@ class _MainScreenState extends State<MainScreen> {
   void initState() {
     super.initState();
     _selectedIndex = 0;
+    MyData.initializeData();
   }
 
   @override

@@ -54,8 +54,8 @@ class _HomeScreenState extends State<HomeScreen> {
             height: 100,
             child: DrawerHeader(
               decoration: BoxDecoration(
-                color: Colors.blue,
-                shape: BoxShape.rectangle,
+                color: Color.fromARGB(255, 29, 32, 34),
+                //shape: BoxShape.rectangle,
               ),
               child: Text(
                 'List of Websites',
