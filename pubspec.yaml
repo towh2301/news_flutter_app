@@ -59,6 +59,8 @@ dependencies:
     get: ^4.6.6
     flutter_image: ^4.1.11
     html: ^0.15.4
+    uuid: ^4.4.0
+    tiengviet: ^1.0.0
 
 dev_dependencies:
     flutter_test:
