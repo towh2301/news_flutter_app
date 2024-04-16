@@ -126,9 +126,16 @@ class _WebFeedState extends State<_WebFeed> {
 
   setRightIcon(isClicked, index, RSSItem item) {
     return MyData.isBookmarked(item)
-        ? const Icon(Icons.bookmark, color: Color.fromARGB(255, 0, 0, 0))
-        : const Icon(Icons.bookmark_border,
-            color: Color.fromARGB(255, 0, 0, 0));
+        ? const Icon(
+            Icons.bookmark,
+            color: Color.fromARGB(255, 0, 0, 0),
+            size: 30.0,
+          )
+        : const Icon(
+            Icons.bookmark_border,
+            color: Color.fromARGB(255, 0, 0, 0),
+            size: 30.0,
+          );
   }
 
   // Set bookmark index
