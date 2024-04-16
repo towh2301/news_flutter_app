@@ -18,7 +18,6 @@ class MyData {
         .then((QuerySnapshot querySnapshot) {
       for (var doc in querySnapshot.docs) {
         RSSItem item = RSSItem.fromJson(doc.data() as Map<String, dynamic>);
-        print("itemssssss: ${item}");
         addBookmark(item);
       }
     });

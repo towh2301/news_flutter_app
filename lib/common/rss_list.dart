@@ -40,8 +40,8 @@ const Map<String, String> vnexpressRssList = {
 
 class RssMapFile {
   List<Map<String, String>> rssMap = [
-    vnexpressRssList,
     baonhandanRssList,
+    vnexpressRssList,
     congannhandanRssList,
   ];
 }
