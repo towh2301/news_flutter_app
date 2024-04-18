@@ -147,12 +147,12 @@ class _BookmarkScreenState extends State<BookmarkScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Colors.white,
-        appBar: AppBar(
-          title: const Text(
-            'Bookmark',
-            style: TextStyle(color: Colors.black),
-          ),
-        ),
+        // appBar: AppBar(
+        //   title: const Text(
+        //     'Bookmark',
+        //     style: TextStyle(color: Colors.black),
+        //   ),
+        // ),
         body: Padding(
           padding: const EdgeInsets.all(10.0),
           child: list(MyData.bookmarksMap),
