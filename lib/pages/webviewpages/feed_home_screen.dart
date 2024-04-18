@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:news_flutter_app/common/rss_list.dart';
@@ -174,6 +175,27 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  Future<void> logout() {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      Navigator.of(context).pop();
+      return FirebaseAuth.instance.signOut();
+    } else {
+      throw Exception('No user found');
+    }
+  }
+
+  List<String> getVisibleProviders(BuildContext context) {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return [];
+
+    final linkedProviders =
+        user.providerData.map((provider) => provider.providerId).toList();
+    return linkedProviders
+        .where((provider) => provider != 'google.com')
+        .toList(); // Hide Google provider
+  }
+
   void goToProfile(context) {
     Navigator.push(
       context,
@@ -186,22 +208,11 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           avatarPlaceholderColor: Colors.blue[600],
+          showMFATile: false,
           actions: [
-            SignedOutAction(
-              (context) {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-          children: [
-            const Divider(),
-            Padding(
-              padding: const EdgeInsets.all(2),
-              child: AspectRatio(
-                aspectRatio: 1,
-                child: Image.asset('assets/images/verify.png'),
-              ),
-            )
+            SignedOutAction((context) {
+              Navigator.of(context).pop();
+            })
           ],
         ),
       ),
