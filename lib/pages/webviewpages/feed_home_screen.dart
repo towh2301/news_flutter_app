@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:news_flutter_app/common/rss_list.dart';
 import 'package:news_flutter_app/pages/webviewpages/webfeed.dart';
 
@@ -15,7 +16,7 @@ class _HomeScreenState extends State<HomeScreen> {
   // Initialize the list of websites
   final List<Map<String, String>> websites = RssMapFile().rssMap;
   final websiteMap = WebsitesList().websList;
-  Map<String, String>? _categories;
+  late Map<String, String>? _categories;
   late String _websiteName = '';
 
   // Set index for page
@@ -31,13 +32,19 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  // _getCategories(int index) {
+  //   Map<String, String> categories = {};
+  //   categories = websites[index];
+  //   return categories;
+  // }
+
   @override
   void initState() {
     super.initState();
-    _categories = _getCategories();
-    _url = _categories!.values.elementAt(0);
-    _category = _categories!.keys.elementAt(0);
-    _websiteName = websiteMap.keys.elementAt(0);
+    _categories = websites[1];
+    _url = _categories!.values.elementAt(1);
+    _category = _categories!.keys.elementAt(1);
+    _websiteName = websiteMap.keys.elementAt(1);
   }
 
   Drawer sideBarCustom(context, Map websiteMap) {
@@ -50,13 +57,13 @@ class _HomeScreenState extends State<HomeScreen> {
             height: 100,
             child: DrawerHeader(
               decoration: BoxDecoration(
-                color: Color.fromARGB(255, 29, 32, 34),
+                color: Color.fromARGB(255, 39, 38, 38),
                 //shape: BoxShape.rectangle,
               ),
               child: Text(
                 'List of Websites',
                 style: TextStyle(
-                  color: Colors.white,
+                  color: Color.fromARGB(255, 255, 255, 255),
                   fontSize: 20,
                 ),
                 textAlign: TextAlign.center,
@@ -68,7 +75,7 @@ class _HomeScreenState extends State<HomeScreen> {
               title: Text(
                 website.key,
                 style: const TextStyle(
-                  color: Colors.black,
+                  color: Color.fromARGB(255, 0, 0, 0),
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -87,17 +94,12 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  _getCategories() {
-    Map<String, String> categories = {};
-    categories = websites[0];
-    return categories;
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        surfaceTintColor: Colors.transparent,
         title: Text(
           _websiteName,
           style: const TextStyle(
@@ -113,9 +115,10 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: Column(
         children: <Widget>[
-          Flexible(
+          Expanded(
             child: ListView.builder(
-              padding: const EdgeInsets.all(10),
+              shrinkWrap: true,
+              padding: const EdgeInsets.only(left: 10),
               scrollDirection: Axis.horizontal,
               itemCount: _categories?.length,
               itemBuilder: (context, index) {
@@ -124,28 +127,33 @@ class _HomeScreenState extends State<HomeScreen> {
                 final isSelected = (_selectedIndex == index);
                 return Row(
                   children: <Widget>[
-                    Container(
-                      width: 130,
-                      height: 60,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          color: isSelected ? Colors.blue : Colors.white),
-                      alignment: Alignment.center,
-                      margin: const EdgeInsets.only(right: 10),
-                      child: ListTile(
-                        title: Text(
-                          textAlign: TextAlign.center,
-                          category ?? '',
-                          textDirection: TextDirection.ltr,
-                          style: TextStyle(
-                            color: isSelected ? Colors.white : Colors.black,
-                            fontSize: 14,
+                    SizedBox(
+                      height: 40,
+                      child: InkWell(
+                        onTap: () {
+                          navigateBottomBar(index, url!, category);
+                        },
+                        child: Container(
+                          width: category!.length * 14.0,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            color: isSelected
+                                ? const Color.fromARGB(255, 0, 0, 0)
+                                : Colors.white,
+                          ),
+                          alignment: Alignment.center,
+                          margin: const EdgeInsets.only(right: 10),
+                          child: Text(
+                            category,
+                            textAlign: TextAlign.center,
+                            //textDirection: TextDirection.ltr,
+                            style: TextStyle(
+                              color: isSelected ? Colors.white : Colors.black,
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
-                        splashColor: Colors.white,
-                        onTap: () {
-                          navigateBottomBar(index, url!, category!);
-                        },
                       ),
                     ),
                   ],
@@ -154,10 +162,9 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           Expanded(
-            flex: 6,
+            flex: 12,
             child: FutureBuilder(
               future: webFeedView(_url, _category),
-              //future: webFeedViewTest(_url, _category),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const CircularProgressIndicator();
@@ -202,6 +209,7 @@ class _HomeScreenState extends State<HomeScreen> {
       MaterialPageRoute<ProfileScreen>(
         builder: (context) => ProfileScreen(
           appBar: AppBar(
+            surfaceTintColor: Colors.transparent,
             title: const Text(
               'Profile',
               textAlign: TextAlign.left,

@@ -129,12 +129,12 @@ class _WebFeedState extends State<_WebFeed> {
         ? const Icon(
             Icons.bookmark,
             color: Color.fromARGB(255, 0, 0, 0),
-            size: 30.0,
+            size: 25.0,
           )
         : const Icon(
             Icons.bookmark_border,
             color: Color.fromARGB(255, 0, 0, 0),
-            size: 30.0,
+            size: 25.0,
           );
   }
 

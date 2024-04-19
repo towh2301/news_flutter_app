@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:news_flutter_app/common/navbar.dart';
 import 'package:news_flutter_app/models/data/bookmarks_model.dart';
+import 'package:news_flutter_app/pages/homepages/homeTest.dart';
 import 'package:news_flutter_app/pages/webviewpages/feed_home_screen.dart';
 import 'package:news_flutter_app/pages/webviewpages/bookmarkscreen.dart';
 
@@ -27,6 +28,7 @@ class _MainScreenState extends State<MainScreen> {
   final List<Widget> _widgetOptions = <Widget>[
     const HomeScreen(),
     const BookmarkScreen(),
+    const HomeTest()
   ];
 
   @override
@@ -48,6 +50,7 @@ class _MainScreenState extends State<MainScreen> {
         bottomNavigationBar: MyGNavbar(
           onTabChange: (index) => navigateBottomBar(index),
         ),
+        //body: const HomeTest());
         body: _widgetOptions[_selectedIndex]);
   }
 }
