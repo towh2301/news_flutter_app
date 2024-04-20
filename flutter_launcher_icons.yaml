@@ -5,7 +5,10 @@ flutter_launcher_icons:
     android: "launcher_icon"
     ios: true
     image_path: "assets/images/icon.png"
-    min_sdk_android: 21 # android min sdk min:16, default 21
+    heigh: 30
+    width: 30 
+    min_sdk_android: 21
+    # android min sdk min:16, default 21
     web:
         generate: true
         image_path: "assets/images/icon2.png"
