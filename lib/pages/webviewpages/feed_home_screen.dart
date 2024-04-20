@@ -134,7 +134,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           navigateBottomBar(index, url!, category);
                         },
                         child: Container(
-                          width: category!.length * 14.0,
+                          width: category!.length * 12.0,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(20),
                             color: isSelected
