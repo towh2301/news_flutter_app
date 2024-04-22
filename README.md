@@ -19,8 +19,8 @@ This is a Flutter News Application that uses the News RSS to get the latest news
 
 ## Screenshots
 
-![Onboarding](/demoImages/onboarding.png)
-![Login](/demoImages/login.png)
-![Main Screen](/demoImages/mainscreen.png)
-![Bookmark](/demoImages/bookmark.png)
-![Web View](/demoImages/webview.png)
+<img src="/demoImages/onboarding.png" style="height: 400px;"/>
+<img src="/demoImages/login.png" style="height: 400px;"/>
+<img src="/demoImages/mainscreen.png" style="height: 400px;"/>
+<img src="/demoImages/bookmark.png" style="height: 400px;"/>
+<img src="/demoImages/webview.png" style="height: 400px;"/>
