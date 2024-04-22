@@ -4,13 +4,23 @@ A new Flutter project.
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+This project is a starting point for a Flutter application for news application.
 
-A few resources to get you started if this is your first Flutter project:
+## Flutter News Application
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+This is a Flutter News Application that uses the News RSS to get the latest news from different sources. The application is built using the Flutter framework and Dart programming language.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Features
+
+- Get the latest news from different sources
+- Read the full article
+- Save articles to read later
+- Login and Register
+
+## Screenshots
+
+![On Boarding]('./demoImages/onboarding.png')
+![Login]('./demoImages/login.png')
+![Home]('./demoImages/mainscreen.png')
+![Bookmark]('./demoImages/bookmark.png')
+![Web View]('./demoImages/webview.png')
