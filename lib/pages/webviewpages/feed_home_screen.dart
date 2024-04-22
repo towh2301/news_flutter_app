@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:news_flutter_app/common/rss_list.dart';
@@ -32,11 +33,9 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  // _getCategories(int index) {
-  //   Map<String, String> categories = {};
-  //   categories = websites[index];
-  //   return categories;
-  // }
+  bool isWebsiteSelected(String website) {
+    return _websiteName == website;
+  }
 
   @override
   void initState() {
@@ -49,36 +48,26 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Drawer sideBarCustom(context, Map websiteMap) {
     return Drawer(
+      backgroundColor: Colors.white,
       child: ListView(
         // Important: Remove any padding from the ListView.
-        padding: EdgeInsets.zero,
         children: [
-          const SizedBox(
-            height: 100,
-            child: DrawerHeader(
-              decoration: BoxDecoration(
-                color: Color.fromARGB(255, 39, 38, 38),
-                //shape: BoxShape.rectangle,
-              ),
-              child: Text(
-                'List of Websites',
-                style: TextStyle(
-                  color: Color.fromARGB(255, 255, 255, 255),
-                  fontSize: 20,
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ),
-          ),
-          for (var website in websiteMap.entries)
+          for (var website
+              in websiteMap.entries) // Check if website is selected
             ListTile(
               title: Text(
                 website.key,
-                style: const TextStyle(
-                  color: Color.fromARGB(255, 0, 0, 0),
+                style: TextStyle(
+                  color: isWebsiteSelected(website.key)
+                      ? Colors.white
+                      : Colors.black,
+                  fontSize: 20,
                 ),
-                textAlign: TextAlign.center,
+                textAlign: TextAlign.left,
               ),
+              tileColor: isWebsiteSelected(website.key)
+                  ? const Color.fromARGB(255, 0, 0, 0)
+                  : Colors.transparent,
               onTap: () {
                 setState(() {
                   _websiteName = website.key;

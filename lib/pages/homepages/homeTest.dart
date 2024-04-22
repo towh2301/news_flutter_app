@@ -8,7 +8,7 @@ class HomeTest extends StatefulWidget {
 }
 
 class _HomeTestState extends State<HomeTest> {
-  late TabController? _tabController =
+  late final TabController _tabController =
       TabController(length: 6, vsync: ScrollableState());
 
   @override

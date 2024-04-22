@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 ThemeData myTheme1 = ThemeData(
   colorScheme: ColorScheme.fromSeed(
-      seedColor: Color.fromARGB(255, 255, 255, 255), background: Colors.white),
+      seedColor: const Color.fromARGB(255, 255, 255, 255), background: Colors.white),
   useMaterial3: true,
   highlightColor: Colors.transparent,
   hoverColor: Colors.transparent,
